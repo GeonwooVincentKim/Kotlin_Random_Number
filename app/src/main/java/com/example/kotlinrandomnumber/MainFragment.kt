@@ -1,6 +1,8 @@
 package com.example.kotlinrandomnumber
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -32,6 +34,8 @@ class MainFragment : Fragment() {
         }
     }
 
+    private val topicList = mutableListOf("Main Text", "Topic1", "Topic2", "Topic3", "Topic4", "Topic5", "Topic6", "Topic7")
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -40,9 +44,38 @@ class MainFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_main, container, false)
 
         val mainFragmentText: TextView = view.findViewById(R.id.mainFragmentText)
+
+        val splashScreenTimeOff = 3000L
+
+        val mainHandler = Runnable {
+            run {
+                Log.d("Check Number", "Check number is changing or not")
+
+                if (mainFragmentText.text != topicList[0]) {
+                    mainFragmentText.text = topicList[0]
+                }
+            }
+        }
+
+        val handler = Handler(Looper.getMainLooper())
+//        handler.postDelayed(mainHandler, splashScreenTimeOff)
+
+
         mainFragmentText.setOnClickListener {
-            Log.d("Detail Fragment Page", "Go to Detail Fragment Page from Main Fragment Page")
-            findNavController().navigate(R.id.action_mainFragment_to_resultFragment)
+            val random: Int = (0 until(topicList.size)).random()
+            mainFragmentText.text = topicList[random]
+
+            val textRunnable = Runnable {
+                run {
+                    Log.d("Check", "Check the value")
+                    mainFragmentText.text = topicList[0]
+                }
+            }
+
+            handler.postDelayed(textRunnable, splashScreenTimeOff)
+
+//            Log.d("Detail Fragment Page", "Go to Detail Fragment Page from Main Fragment Page")
+//            findNavController().navigate(R.id.action_mainFragment_to_resultFragment)
         }
 
         return view
